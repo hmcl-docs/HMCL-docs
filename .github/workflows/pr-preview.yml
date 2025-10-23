@@ -180,6 +180,7 @@ jobs:
             });
             core.setOutput('check-id', check.id);
   preview-create-build:
+    if: ${{ always() && needs.preview-create-init == 'success' }}
     needs: preview-create-init
     runs-on: ubuntu-latest
     outputs:
@@ -210,6 +211,7 @@ jobs:
           name: site
           path: /home/runner/site
   preview-create-deploy:
+    if: ${{ always() && needs.preview-create-build == 'success' }}
     needs: [preview-create-init, preview-create-build]
     runs-on: ubuntu-latest
     environment:
