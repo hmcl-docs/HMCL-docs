@@ -125,22 +125,18 @@ jobs:
   preview-create-init:
     if: >-
       ${{
-        always() && (
-          needs.preview-watch.result == 'success' || (
-          github.event.repository.fork && (
-            ( github.event_name == 'pull_request_target' &&
-              github.event.action == 'labeled' &&
-              contains('preview/create,preview/watch', github.event.label.name)
-            ) || (
-              github.event_name == 'issue_comment' &&
-              github.event.issue.pull_request &&
-              github.event.comment.body == '/preview create' &&
-              contains('OWNER,MEMBER', github.event.comment.author_association)
-            )
-          ))
+        github.event.repository.fork && (
+          ( github.event_name == 'pull_request_target' &&
+            github.event.action == 'labeled' &&
+            contains('preview/create,preview/watch', github.event.label.name)
+          ) || (
+            github.event_name == 'issue_comment' &&
+            github.event.issue.pull_request &&
+            contains('/preview create,/preview watch', github.event.comment.body) &&
+            contains('OWNER,MEMBER', github.event.comment.author_association)
+          )
         )
       }}
-    needs: preview-watch
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -180,7 +176,6 @@ jobs:
             });
             core.setOutput('check-id', check.id);
   preview-create-build:
-    if: ${{ always() && needs.preview-create-init == 'success' }}
     needs: preview-create-init
     runs-on: ubuntu-latest
     outputs:
@@ -211,7 +206,6 @@ jobs:
           name: site
           path: /home/runner/site
   preview-create-deploy:
-    if: ${{ always() && needs.preview-create-build == 'success' }}
     needs: [preview-create-init, preview-create-build]
     runs-on: ubuntu-latest
     environment:
