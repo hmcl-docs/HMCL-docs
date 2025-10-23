@@ -87,8 +87,8 @@ jobs:
               repo: context.repo.repo,
               key: "${{ steps.restore-pages.outputs.cache-matched-key }}"
             });
-      - if: ${{ github.event_name == 'pull_request_target' }}
-        name: Remove Label (pull_request_target)
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'preview/remove') }}
+        name: Remove Label (preview/remove)
         continue-on-error: true
         uses: actions/github-script@v8
         with:
@@ -98,6 +98,18 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               name: "preview/remove"
+            });
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'preview/watch') }}
+        name: Remove Label (preview/watch)
+        continue-on-error: true
+        uses: actions/github-script@v8
+        with:
+          script: |
+            github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              name: "preview/watch"
             });
   preview-watch:
     if: >-
