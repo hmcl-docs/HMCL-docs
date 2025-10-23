@@ -87,7 +87,7 @@ jobs:
               repo: context.repo.repo,
               key: "${{ steps.restore-pages.outputs.cache-matched-key }}"
             });
-      - if: ${{ contains(github.event.pull_request.labels.*.name, 'preview/remove') }}
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'preview/remove') || contains(github.event.issue.labels.*.name, 'preview/remove') }}
         name: Remove Label (preview/remove)
         continue-on-error: true
         uses: actions/github-script@v8
@@ -99,7 +99,7 @@ jobs:
               issue_number: context.issue.number,
               name: "preview/remove"
             });
-      - if: ${{ contains(github.event.pull_request.labels.*.name, 'preview/watch') }}
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'preview/watch') || contains(github.event.issue.labels.*.name, 'preview/watch') }}
         name: Remove Label (preview/watch)
         continue-on-error: true
         uses: actions/github-script@v8
