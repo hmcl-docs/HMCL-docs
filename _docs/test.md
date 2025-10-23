@@ -4,4 +4,4 @@ title: test
 
 test
 
-test
+synchronize test
