@@ -120,7 +120,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              name: "preview/watch"
+              labels: [{ name: "preview/watch" }]
             });
   preview-create-init:
     if: >-
