@@ -3,7 +3,7 @@ on:
   issue_comment:
     types: [created]
   pull_request_target:
-    types: [labeled, opened, reopened, synchronized, closed]
+    types: [labeled, synchronized, closed]
 concurrency:
   group: pr-preview
   cancel-in-progress: false
@@ -128,7 +128,7 @@ jobs:
         github.event.repository.fork && (
           ( github.event_name == 'pull_request_target' && (
               ( github.event.action == 'labeled' && contains('preview/create,preview/watch', github.event.label.name) ) ||
-              ( contains('opened,reopened,synchronized', github.event.action) && contains(github.event.pull_request.labels.*.name, 'preview/watch') )
+              ( github.event.action == 'synchronized' && contains(github.event.pull_request.labels.*.name, 'preview/watch') )
             )
           ) || (
             github.event_name == 'issue_comment' &&
